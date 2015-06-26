@@ -16,6 +16,8 @@ class LeftistHeap
     void deleteMin( Comparable & minItem );
     void makeEmpty();
     void merge( LeftistHeap & rhs );
+    void printHeap() const;
+
   private:
     struct Node
     {
@@ -36,6 +38,7 @@ class LeftistHeap
     void swapChildren( Node* p );
     void freeMemory( Node* node );
     Node* clone( Node* node ) const;
+    void printHeap( Node* node ) const;
 };
 
 template <typename Comparable>
@@ -99,6 +102,14 @@ void LeftistHeap<Comparable>::merge( LeftistHeap & rhs )
 }
 
 template <typename Comparable>
+Node* LeftistHeap<Comparable>::printHeap() const
+{
+  if( root != nullptr )
+    printHeap(root);
+  cout << endl;
+}
+
+template <typename Comparable>
 Node* LeftistHeap<Comparable>::merge( Node* h1, Node* h2 )
 {
   if( h1 == nullptr )
@@ -151,6 +162,16 @@ Node* LeftistHeap<Comparable>::clone( Node* node ) const
     return nullptr;
   else
     return new Node( node->element, clone( node->left), clone( node->right), node->npl);
+}
+
+template <typename Comparable>
+void LeftistHeap<Comparable>::printHeap( Node* node ) const
+{
+  if( node->left != nullptr )
+    printHeap(node-left);
+  cout << node->element << " ";
+  if( node->right != nullptr )
+    printHeap(node-right);
 }
 
 
