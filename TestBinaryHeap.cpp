@@ -6,6 +6,7 @@ using namespace std;
 
 int main( )
 {
+  int comparison_num = 0;
   int minItem;
   BinaryHeap<int> h;
   int item_list[] = { 9, 3, 5, 6, 7, 1, 2, 4, 7, 8};
@@ -24,6 +25,8 @@ int main( )
     h.insert(items[i]);
   cout << "Heap after serial insertion" << endl;
   h.printHeap();
+  comparison_num = h.getComparisonNum() - comparison_num;
+  cout << "The comparison number of the serial insertion: " << comparison_num << endl;
   cout << endl;
 
   temp.clear();
@@ -37,6 +40,11 @@ int main( )
   for( int i = 0; i < temp.size(); i++ )
     cout << temp[i] << " ";
   cout << endl;
+  
+  comparison_num = h.getComparisonNum() - comparison_num;
+  cout << "\nThe comparison number of the serial deleteMin: " << comparison_num << endl;
+
+  cout << "\nTotal comparison number: " << h.getComparisonNum() << endl;
 
   //Test the underlying build heap function
   cout << "\nTest the underlying build heap function" << endl;
