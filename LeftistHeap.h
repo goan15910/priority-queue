@@ -17,6 +17,7 @@ class LeftistHeap
     void makeEmpty();
     void merge( LeftistHeap & rhs );
     void printHeap() const;
+    int getComparisonNum() const;
 
   private:
     struct Node
@@ -32,6 +33,7 @@ class LeftistHeap
     };
 
     Node* root;
+    int comparison_num;
 
     void swapChildren( Node* p );
     void freeMemory( Node* node );
@@ -43,10 +45,14 @@ class LeftistHeap
         return h2;
       if( h2 == nullptr )
         return h1;
-      if( h1->element < h2->element )
+      if( h1->element < h2->element ){
+        comparison_num++;
         return merge1( h1, h2 );
-      else
+      }
+      else{
+        comparison_num++;
         return merge1( h2, h1 );
+      }
     }
 
     Node* merge1( Node* h1, Node* h2 )
@@ -55,8 +61,12 @@ class LeftistHeap
         h1->left = h2;
       else{
         h1->right = merge( h1->right, h2 );
-        if( h1->left->npl < h1->right->npl )
+        if( h1->left->npl < h1->right->npl ){
           swapChildren( h1 );
+          comparison_num++;
+        }
+        else
+          comparison_num++;
         h1->npl = h1->right->npl + 1;
       }
       return h1;
@@ -66,7 +76,7 @@ class LeftistHeap
 
 template <typename Comparable>
 LeftistHeap<Comparable>::LeftistHeap()
-  : root(nullptr)
+  : root(nullptr), comparison_num(0)
 {
   //empty body
 }
@@ -130,6 +140,12 @@ void LeftistHeap<Comparable>::printHeap() const
   if( root != nullptr )
     printHeap(root);
   cout << endl;
+}
+
+template <typename Comparable>
+int LeftistHeap<Comparable>::getComparisonNum() const
+{
+  return comparison_num;
 }
 
 template <typename Comparable>
