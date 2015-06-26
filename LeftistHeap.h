@@ -29,16 +29,39 @@ class LeftistHeap
       Node( const Comparable & e, Node* lt=nullptr, Node* rt=nullptr, int np=0 )
         : element(e), left(lt), right(rt), npl(np)
       { /*empty body*/ }
-    }
+    };
 
     Node* root;
 
-    Node* merge( Node* h1, Node* h2 );
-    Node* merge1( Node* h1, Node* h2 );
     void swapChildren( Node* p );
     void freeMemory( Node* node );
-    Node* clone( Node* node ) const;
     void printHeap( Node* node ) const;
+
+    Node* merge( Node* h1, Node* h2 )
+    {
+      if( h1 == nullptr )
+        return h2;
+      if( h2 == nullptr )
+        return h1;
+      if( h1->element < h2->element )
+        return merge1( h1, h2 );
+      else
+        return merge1( h2, h1 );
+    }
+
+    Node* merge1( Node* h1, Node* h2 )
+    {
+      if( h1->left == nullptr )
+        h1->left = h2;
+      else{
+        h1->right = merge( h1->right, h2 );
+        if( h1->left->npl < h1->right->npl )
+          swapChildren( h1 );
+        h1->npl = h1->right->npl + 1;
+      }
+      return h1;
+    }
+
 };
 
 template <typename Comparable>
@@ -71,7 +94,7 @@ void LeftistHeap<Comparable>::deleteMin( Comparable & minItem )
 {
   // Throw exception for deleteMin from empty heap
   if( isEmpty() )
-    throw invalid_arguement("deleteMin from an empty heap");
+    throw invalid_argument("deleteMin from an empty heap");
 
   // Assgin root's element to minItem
   minItem = root->element;
@@ -97,44 +120,16 @@ void LeftistHeap<Comparable>::merge( LeftistHeap & rhs )
   if( this == &rhs )
     return;
   
-  root = merge( root, rhs.root )
+  root = merge( root, rhs.root );
   rhs.root = nullptr;
 }
 
 template <typename Comparable>
-Node* LeftistHeap<Comparable>::printHeap() const
+void LeftistHeap<Comparable>::printHeap() const
 {
   if( root != nullptr )
     printHeap(root);
   cout << endl;
-}
-
-template <typename Comparable>
-Node* LeftistHeap<Comparable>::merge( Node* h1, Node* h2 )
-{
-  if( h1 == nullptr )
-    return h2;
-  if( h2 == nullptr )
-    return h1;
-  if( h1->element < h2->element )
-    return merge1( h1, h2 );
-  else
-    return merge1( h2, h1 );
-}
-
-template <typename Comparable>
-Node* LeftistHeap<Comparable>::merge1( Node* h1, Node* h2 )
-{
-  if( h1->left == nullptr )
-    h1->left = h2;
-  else
-  {
-    h1->right = merge( h1->right, h2 );
-    if( h1->left->npl < h1->right->npl )
-      swapChildren( h1 );
-      h1->npl = h1->right->npl + 1;
-  }
-  return h1;
 }
 
 template <typename Comparable>
@@ -156,22 +151,13 @@ void LeftistHeap<Comparable>::freeMemory( Node* node )
 }
 
 template <typename Comparable>
-Node* LeftistHeap<Comparable>::clone( Node* node ) const
-{
-  if( node == nullptr )
-    return nullptr;
-  else
-    return new Node( node->element, clone( node->left), clone( node->right), node->npl);
-}
-
-template <typename Comparable>
 void LeftistHeap<Comparable>::printHeap( Node* node ) const
 {
   if( node->left != nullptr )
-    printHeap(node-left);
+    printHeap(node->left);
   cout << node->element << " ";
   if( node->right != nullptr )
-    printHeap(node-right);
+    printHeap(node->right);
 }
 
 
