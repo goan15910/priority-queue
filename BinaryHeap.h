@@ -93,9 +93,8 @@ void BinaryHeap<Comparable>::deleteMin( Comparable & minItem )
 template <typename Comparable>
 void BinaryHeap<Comparable>::makeEmpty()
 {
-  //clear the array, resize it to capacity of 100
-  //set current size to 0
-  array.clear();
+  // resize array to capacity of 100
+  // set current size to 0
   array.resize(101);
   currentSize = 0;
 }
