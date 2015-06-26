@@ -78,7 +78,7 @@ void BinaryHeap<Comparable>::deleteMin( Comparable & minItem )
 {
   //test if heap is empty
   if( isEmpty() )
-    throw invalid_argument("deleteMin from a empty heap");
+    throw invalid_argument("deleteMin from an empty heap");
 
   // set minItem to the minimun element in heap
   minItem = array[1];

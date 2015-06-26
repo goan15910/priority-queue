@@ -13,7 +13,7 @@ class LeftistHeap
     ~LeftistHeap();
     bool isEmpty() const;
     void insert( const Comparable & x );
-    void deleteMin( Comparable minItem );
+    void deleteMin( Comparable & minItem );
     void makeEmpty();
     void merge( LeftistHeap & rhs );
   private:
@@ -60,13 +60,24 @@ bool LeftistHeap<Comparable>::isEmpty() const
 template <typename Comparable>
 void LeftistHeap<Comparable>::insert( const Comparable & x )
 {
-//TODO
+  root = merge( new Node(x), root );
 }
 
 template <typename Comparable>
-void LeftistHeap<Comparable>::deleteMin( Comparable minItem )
+void LeftistHeap<Comparable>::deleteMin( Comparable & minItem )
 {
-//TODO
+  // Throw exception for deleteMin from empty heap
+  if( isEmpty() )
+    throw invalid_arguement("deleteMin from an empty heap");
+
+  // Assgin root's element to minItem
+  minItem = root->element;
+
+  // merge left, right sub-tree of root
+  // delete root
+  Node* old_root = root;
+  root = merge( root->left, root->right );
+  delete old_root;
 }
 
 template <typename Comparable>
@@ -79,19 +90,40 @@ void LeftistHeap<Comparable>::makeEmpty()
 template <typename Comparable>
 void LeftistHeap<Comparable>::merge( LeftistHeap & rhs )
 {
-//TODO
+  //avoid self merging
+  if( this == &rhs )
+    return;
+  
+  root = merge( root, rhs.root )
+  rhs.root = nullptr;
 }
 
 template <typename Comparable>
 Node* LeftistHeap<Comparable>::merge( Node* h1, Node* h2 )
 {
-//TODO
+  if( h1 == nullptr )
+    return h2;
+  if( h2 == nullptr )
+    return h1;
+  if( h1->element < h2->element )
+    return merge1( h1, h2 );
+  else
+    return merge1( h2, h1 );
 }
 
 template <typename Comparable>
 Node* LeftistHeap<Comparable>::merge1( Node* h1, Node* h2 )
 {
-//TODO
+  if( h1->left == nullptr )
+    h1->left = h2;
+  else
+  {
+    h1->right = merge( h1->right, h2 );
+    if( h1->left->npl < h1->right->npl )
+      swapChildren( h1 );
+      h1->npl = h1->right->npl + 1;
+  }
+  return h1;
 }
 
 template <typename Comparable>
