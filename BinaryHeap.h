@@ -18,10 +18,12 @@ class BinaryHeap
     void deleteMin( Comparable & minItem );
     void makeEmpty();
     void printHeap() const;
+    int getComparisonNum() const;
 
   private:
     int currentSize;
     vector<Comparable> array;
+    int comparison_num;
     
     void buildHeap();
     void percolateDown(int i);
@@ -31,7 +33,7 @@ class BinaryHeap
 
 template <typename Comparable>
 BinaryHeap<Comparable>::BinaryHeap( int capacity )
-  : array(capacity + 1), currentSize(0) 
+  : array(capacity + 1), currentSize(0), comparison_num(0)
 {
   //empty body
 }
@@ -108,6 +110,12 @@ void BinaryHeap<Comparable>::printHeap() const
 }
 
 template <typename Comparable>
+int BinaryHeap<Comparable>::getComparisonNum() const
+{
+  return comparison_num;
+}
+
+template <typename Comparable>
 void BinaryHeap<Comparable>::buildHeap()
 {
   for( int i = currentSize/2; i >= 1; i-- )
@@ -128,24 +136,32 @@ void BinaryHeap<Comparable>::percolateDown(int i)
     if( left == currentSize && array[left] < array[pos] ){
       swap(pos, left);
       pos = left;
+      comparison_num++;
       break;
     }
-    else if( left == currentSize && array[left] >= array[pos] )
+    else if( left == currentSize && array[left] >= array[pos] ){
+      comparison_num++;
       break;
+    }
 
     // case where array[pos] has both its children
     if( array[left] <= array[pos] || array[right] <= array[pos] ){
+      comparison_num += 2;
       if( array[left] <= array[right] ){
         swap(pos, left);
         pos = left;
+        comparison_num++;
       }
       else if( array[right] < array[left] ){
         swap(pos, right);
         pos = right;
+        comparison_num++;
       }
     }
-    else
+    else{
+      comparison_num += 2;
       break;
+    }
   }
 }
 
@@ -157,8 +173,10 @@ void BinaryHeap<Comparable>::percolateUp(int i)
   int pos = i;
   while( pos >= 1 ){
     int parent_pos = pos / 2;
-    if( array[pos] < array[parent_pos] )
+    if( array[pos] < array[parent_pos] ){
       swap(pos, parent_pos);
+      comparison_num++;
+    }
     pos = parent_pos;
   }
 }
