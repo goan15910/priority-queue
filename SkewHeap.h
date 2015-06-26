@@ -60,13 +60,7 @@ class SkewHeap
         h1->left = h2;
       else{
         h1->right = merge( h1->right, h2 );
-        if( h1->left->npl < h1->right->npl ){
-          swapChildren( h1 );
-          comparison_num++;
-        }
-        else
-          comparison_num++;
-        h1->npl = h1->right->npl + 1;
+        swapChildren( h1 );
       }
       return h1;
     }
