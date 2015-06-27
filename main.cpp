@@ -27,27 +27,28 @@ int main( int argc, char** argv )
   vector< vector< vector<int> > > results;
   vector< vector< vector<int> > > cp_counts;
 
+  srand( time(NULL) );
+
   // Set n for seq number and random generation range
   int n = atoi(argv[1]);
   cout << "n = " << n << endl;
 
   // Test 3 heaps with 20 random input seqences
   cout << "Testing heaps with 20 random input sequence ..." << endl;
-  for( int j = 0; j < seq_num; j++ ){
+  for( int j = 0; j < SEQ_NUM; j++ ){
     // initialize seq
     vector<int> seq;
 
     // generate seq randomly
     generate_random_seq(n, seq);
-    for( int k = 0; k < seq.size(); k++ )
-      seqs[j].push_back(seq[k]);
+    seqs.push_back( seq );
 
     // set container for each heap
-    vector< vector<int> > heap_counts(HEAP_SIZE);
-    vector< vector<int> > heap_results(HEAP_SIZE);
+    vector< vector<int> > heap_counts(HEAP_NUM);
+    vector< vector<int> > heap_results(HEAP_NUM);
 
     // sort the sorting procedure
-    sorting_procedure( n, seq, heap_counts, heap_results );
+    sorting_procedure( n, seq, heap_results, heap_counts );
 
     // push back the containers of each heap
     results.push_back( heap_results );
@@ -65,15 +66,22 @@ int main( int argc, char** argv )
   store_heap_results( 0, "BinaryHeap_sorting_result.txt", n, seqs, results );
   store_heap_results( 1, "LeftistHeap_sorting_result.txt", n, seqs, results );
   store_heap_results( 2, "SkewHeap_sorting_result.txt", n, seqs, results );
+
+  // store the seqences
+  ofstream f;
+  f.open( "Sequences.txt", ios::out );
+  f << "n = " << n << endl;
+  for( int i = 0; i < SEQ_NUM; i++ )
+    f << vec2string( seqs[i] ) << "\n";
+  f.close();
 }
 
 void generate_random_seq( const int & n, vector<int> & seq )
 {
   int rand_num;
   int max = n*n;
-  srand( time(NULL) );
   for( int i = 0; i < n; i++ ){
-    rand_num = 1 + ( rand() % (max) )
+    rand_num = 1 + ( rand() % (max) );
     seq.push_back( rand_num );
   }
 }
@@ -138,9 +146,9 @@ void store_heap_counts( int heap_idx, string fname, const int & n, const vector<
   f.open( fname.c_str(), ios::out );
   f << "n = " << n << endl;
   for( int i = 0; i < SEQ_NUM; i++ ){
-    f << "insertion: " << to_string( cp_counts[i][heap_idx][0] ) << "\n";
-    f << "deleteMin: " << to_string( cp_counts[i][heap_idx][1] ) << "\n";
-    f << "total: " << to_string( cp_counts[i][heap_idx][2] ) << "\n";
+    f << "insertion:" << "\t" << to_string( cp_counts[i][heap_idx][0] ) << "\n";
+    f << "deleteMin:" << "\t" << to_string( cp_counts[i][heap_idx][1] ) << "\n";
+    f << "total:" << "\t" << to_string( cp_counts[i][heap_idx][2] ) << "\n";
   }
   f.close();
 }
